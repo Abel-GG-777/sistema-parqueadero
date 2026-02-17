@@ -430,7 +430,7 @@ function verComprobanteSalida(id) {
                     <button class="btn btn-close" onclick="window.close()">Cerrar</button>
                 </div>
 
-                <img src="https://sisparking.onrender.com/images/insigniacarro.png" class="logo-img">
+                <img src="https://sistema-parqueadero-elo1.onrender.com/images/insigniacarro.png" class="logo-img">
 
 
                 <div class="titulo">ESTACIONAMIENTO</div>
@@ -504,7 +504,7 @@ function verComprobanteSalida(id) {
 
 function verComprobante(id) {
 
-    fetch(`http://localhost:8080/api/vehiculos/${id}`)
+    fetch(`https://sistema-parqueadero-elo1.onrender.com/api/vehiculos/${id}`)
             .then(res => res.json())
             .then(data => {
                 mostrarComprobante(data);
@@ -1033,7 +1033,7 @@ function eliminarEspacio(id) {
     if (!confirm("¿Seguro que deseas eliminar este espacio?"))
         return;
 
-    fetch(`http://localhost:8080/api/pisos/${pisoActualId}/espacios/${id}`, {
+    fetch(`https://sistema-parqueadero-elo1.onrender.com/api/pisos/${pisoActualId}/espacios/${id}`, {
         method: "DELETE"
     })
             .then(res => {
