@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="es">
+    <head>
+        <title>Sistema de Parqueadero</title>
+        <link rel="stylesheet" href="/style.css?v=999999999">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+
+
+
+    <body>
+        <!-- CABECERA -->
+        <header class="header">
+            <h1>Sistema Web Parqueadero</h1>
+            <p>Control de ingreso y salida de vehículos</p>
+        </header>
+
+
+        <div class="layout">
+
+            <!-- MENU LATERAL -->
+            <aside class="sidebar">
+
+                <!-- IMAGEN - MENU LATERAL -->
+                <div class="sidebar-logo">
+                    <img src="/images/insigniacarro.png" alt="Parking">
+                </div>
+
+                <h3>Menú</h3>
+                <ul class="menu">
+                    <li class="active" onclick="mostrarVistaVehiculos()">Vehículos</li>
+                    <li  id="menuCaja" class="active" onclick="mostrarVistaCaja()">Caja</li>
+                    <li class="active" onclick="mostrarVistaEspacios()">Espacios</li>
+                    <li class="active" onclick="mostrarVistaTarifas()">Tarifas</li>
+                    <li class="active" onclick="mostrarVistaReportes()">Reportes</li>
+                    <li onclick="logout()">Cerrar sesión</li>
+
+
+                </ul>
+            </aside>
+
+
+            <!-- CONTENIDO PRINCIPAL -->
+
+            <main class="container">
+                <section id="vista-vehiculos">
+                    <div class="card">
+                        <h3>Ingreso de Vehículo</h3>
+
+                        <form id="formVehiculo" class="form">
+                            <input id="placa" placeholder="Placa" required>
+
+
+                            <select id="tipoVehiculo">
+                                <option>AUTO</option>
+                                <option>MOTO</option>
+                                <option>CAMIONETA</option>
+                                <option>BUS</option>
+                                <option>CAMION</option>
+                            </select>
+
+                            <button class="btn-primary">Ingresar</button>
+                        </form>
+                    </div>
+
+                    <!-- DASHBOARD -->
+                    <div class="dashboard">
+
+                        <div class="dashboard-card">
+                            <div class="dashboard-number" id="countIngresados">0</div>
+                            <div class="dashboard-label">Ingresados</div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="dashboard-number" id="countEgresados">0</div>
+                            <div class="dashboard-label">Egresados</div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="dashboard-number" id="countTipos">0</div>
+                            <div class="dashboard-label">Categoría de vehículos</div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="card">
+                        <h3>Vehículos Registrados</h3>
+                        <input
+                            type="text"
+                            id="buscador"
+                            placeholder="Buscador"
+                            onkeyup="filtrarTabla()"
+                            />
+
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Ticket</th>
+                                    <th>Ingreso</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                    <th>Comprobante</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaVehiculos"></tbody>
+                        </table>
+                    </div>
+
+                </section>
+
+                <!-- ===== VISTA DETALLE ===== -->
+                <section id="vista-detalle" style="display:none">
+
+                    <div class="card detalle-layout">
+
+
+                        <div class="detalle-col">
+                            <h3>Detalle del Vehículo</h3>
+
+                            <p><b>N° Ticket:</b> <span id="d-id"></span></p>
+                            <p><b>Placa:</b> <span id="d-placa"></span></p>
+                            <p><b>Tipo:</b> <span id="d-tipo"></span></p>
+                            <p><b>Ingreso:</b> <span id="d-ingreso"></span></p>
+                            <p><b>Salida:</b> <span id="d-salida">-</span></p>
+                            <p><b>Monto pagado:</b> S/ <span id="d-pago">0.00</span></p>
+                            <hr>
+                            <p><b>Piso:</b> <span id="d-piso">—</span></p>
+                            <p><b>Espacio ocupado:</b> <span id="d-espacio">—</span></p>
+                            <br>
+                            <button id="btnAsignarEspacio" onclick="irAsignarEspacio()">
+                                Asignar espacio
+                            </button>
+
+                        </div>
+
+                        <!-- COLUMNA DERECHA -->
+                        <div class="detalle-col pago">
+
+                            <h4>DETALLE DE PAGO</h4>
+
+                            <div id="tarifarioAplicado" class="pago-box"></div>
+
+                            <p><b>Tiempo:</b> 
+                                <span id="tiempoCalculado">-</span>
+                            </p>
+
+                            <p class="pago-sugerido">
+                                Costo sugerido: S/ 
+                                <span id="costoSugerido">0.00</span>
+                            </p>
+
+                            <div class="pago-inputs">
+                                <div>
+                                    <label>Costo final</label>
+                                    <input type="number" id="costoFinal" step="0.01">
+                                </div>
+
+                                <div>
+                                    <label>Efectivo</label>
+                                    <input type="number" id="efectivoRecibido" step="0.01">
+                                </div>
+                            </div>
+
+                            <p id="mensajeAjuste" class="pago-alerta" style="display:none;">
+                                ⚠ Monto ajustado manualmente
+                            </p>
+
+                            <p class="pago-vuelto">
+                                Vuelto: S/ <span id="vuelto">0.00</span>
+                            </p>
+
+                            <div class="pago-botones">
+                                <button onclick="aceptarPago()" class="pago-aceptar">
+                                    ACEPTAR PAGO
+                                </button>
+
+                                <button onclick="volver()" class="pago-cancelar">
+                                    CANCELAR
+                                </button>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                </section>
+
+
+
+
+                <!-- ===== VISTA CAJA ===== -->
+                <section id="vista-caja" style="display:none">
+                    <div class="card">
+                        <h3>GANANCIAS</h3>
+
+                        <!-- MÉTRICAS DE RECAUDACIÓN -->
+                        <div class="metricas-caja">
+
+                            <div class="metrica-card">
+                                <div class="metrica-titulo">Hoy</div>
+                                <div class="metrica-valor">S/ <span id="m-hoy">0.00</span></div>
+                            </div>
+
+                            <div class="metrica-card">
+                                <div class="metrica-titulo">Semana</div>
+                                <div class="metrica-valor">S/ <span id="m-semana">0.00</span></div>
+                            </div>
+
+                            <div class="metrica-card">
+                                <div class="metrica-titulo">Mes</div>
+                                <div class="metrica-valor">S/ <span id="m-mes">0.00</span></div>
+                            </div>
+
+                            <div class="metrica-card">
+                                <div class="metrica-titulo">Año</div>
+                                <div class="metrica-valor">S/ <span id="m-anio">0.00</span></div>
+                            </div>
+
+                        </div>
+
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Ticket</th>
+                                    <th>Entrada</th>
+                                    <th>Salida</th>
+                                    <th>Tiempo</th>
+                                    <th>Monto (S/)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCaja"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="card resumen-caja">
+                        <h3>Resumen de Caja</h3>
+
+                        <div class="resumen-items">
+                            <div class="resumen-box">
+                                <span class="label">Ganancia total</span>
+                                <span class="valor">S/ <span id="total-ganancia">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- ===== VISTA: GESTIÓN DE PISOS ===== -->
+                <section id="vista-pisos" style="display:none;">
+                    <h2>Gestión de Pisos</h2>
+
+                    <button onclick="crearPiso()">+ Crear Piso</button>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Piso</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-pisos">
+
+                        </tbody>
+                    </table>
+                </section>
+
+
+
+
+                <!-- ===== VISTA: ESPACIOS DEL PISO ===== -->
+                <section id="vista-espacios" style="display:none;">
+                    <button onclick="volverAPisos()">⬅ Volver</button>
+
+                    <h2 id="titulo-piso">Espacios</h2>
+
+                    <div class="crear-espacios">
+                        <label>Cantidad de espacios:</label>
+                        <input type="number" id="cantidadEspacios" min="1">
+                        <button onclick="crearEspacios()">Crear espacios</button>
+                    </div>
+
+                    <div class="eliminar-espacios">
+                        <label>Cantidad a eliminar:</label>
+                        <input type="number" id="cantidadEliminar" min="1">
+                        <button onclick="eliminarEspaciosCantidad()">Eliminar</button>
+                    </div>
+
+
+                    <div id="contenedor-espacios" class="grid-espacios">
+
+                    </div>
+                </section>
+
+
+                <section id="vista-asignar-espacio" style="display:none;">
+                    <button onclick="volver()">⬅ Volver</button>
+                    <h2>Asignar espacio</h2>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Piso</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-pisos-asignar"></tbody>
+                    </table>
+                </section>
+
+
+
+                <section id="vista-tarifas" style="display:none;">
+
+                    <h2>Gestión de Tarifas</h2>
+
+                    <div class="info-horario">
+                        DIA = 08:00 AM a 08:00 PM <br>
+                        NOCHE = 08:00 PM a 08:00 AM
+                    </div>
+
+
+                    <div class="form-tarifa">
+                        <select id="tipoVehiculoTarifa">
+                            <option value="AUTO">AUTO</option>
+                            <option value="MOTO">MOTO</option>
+                            <option value="CAMIONETA">CAMIONETA</option>
+                            <option value="BUS">BUS</option>
+                            <option value="CAMION">CAMION</option>
+                        </select>
+
+                        <select id="horarioTarifa">
+                            <option value="DIA">DIA</option>
+                            <option value="NOCHE">NOCHE</option>
+                        </select>
+
+                        <select id="tipoDiaTarifa">
+                            <option value="NORMAL">NORMAL</option>
+
+                        </select>
+
+                        <input type="number" id="costoTarifa" placeholder="Costo por hora" step="0.01">
+
+                        <button onclick="guardarTarifa()">Guardar</button>
+                    </div>
+
+                    <br>
+
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Horario</th>
+                                <th>Tipo Día</th>
+                                <th>Costo</th>
+                                <th>Acciones</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="tablaTarifas">
+                            <!-- Se llenará dinámicamente desde app.js -->
+                        </tbody>
+                    </table>
+
+                </section>
+
+
+
+
+                <!-- ===== VISTA: REPORTE ===== -->
+                <section id="vistaReportes" style="display:none;">
+
+                    <h2>REPORTES</h2>
+
+                    <!-- ===== REPORTE INGRESOS ===== -->
+                    <div class="bloque-reporte">
+                        <h3>Vehículos que Entraron</h3>
+
+                        Desde: <input type="date" id="rIngresoInicio">
+                        Hasta: <input type="date" id="rIngresoFin">
+
+                        <button onclick="consultarIngresos()">Consultar</button>
+
+                        <div id="tablaReporteIngresos"></div>
+                    </div>
+
+
+                    <!-- ===== REPORTE SALIDAS ===== -->
+                    <div class="bloque-reporte">
+                        <h3>Vehículos que Salieron</h3>
+
+                        Desde: <input type="date" id="rSalidaInicio">
+                        Hasta: <input type="date" id="rSalidaFin">
+
+                        <button onclick="consultarSalidas()">Consultar</button>
+
+                        <div id="tablaReporteSalidas"></div>
+                    </div>
+
+
+                    <!-- ===== REPORTE CAJA ===== -->
+                    <div class="bloque-reporte">
+                        <h3>Reporte de Caja por Día</h3>
+
+                        Desde: <input type="date" id="rCajaInicio">
+                        Hasta: <input type="date" id="rCajaFin">
+
+                        <button onclick="consultarCaja()">Consultar</button>
+
+                        <div id="tablaReporteCaja"></div>
+                    </div>
+
+                    <div class="bloque-reporte">
+
+                        <h3>Reporte Mensual – Ganancia Real</h3>
+
+                        <div class="grid-ganancia">
+
+                            <!-- INGRESOS -->
+                            <div class="columna">
+                                <label>Ingresos (Mensual)</label>
+                                <input type="number" id="ingresosMensuales" placeholder="0.00">
+                            </div>
+
+                            <!-- LUZ -->
+                            <div class="columna">
+                                <label>Pago de Luz (Obligatorio)</label>
+                                <input type="number" id="pagoLuz" placeholder="0.00">
+                            </div>
+
+                            <!-- AGUA -->
+                            <div class="columna">
+                                <label>Pago de Agua (Obligatorio)</label>
+                                <input type="number" id="pagoAgua" placeholder="0.00">
+                            </div>
+
+                            <!-- IMPUESTO -->
+                            <div class="columna">
+                                <label>Impuesto (Opcional)</label>
+                                <input type="number" id="pagoImpuesto" placeholder="0.00">
+                            </div>
+
+                            <!-- EMPLEADO -->
+                            <div class="columna">
+                                <label>Pago por Empleado (Obligatorio)</label>
+                                <input type="number" id="pagoEmpleado" placeholder="0.00">
+                            </div>
+
+                            <!-- CANTIDAD EMPLEADOS -->
+                            <div class="columna">
+                                <label>Cantidad de Empleados</label>
+                                <input type="number" id="cantidadEmpleados" value="2">
+                            </div>
+
+                            <!-- BANCO -->
+                            <div class="columna">
+                                <label>Pago de Banco (Opcional)</label>
+                                <input type="number" id="pagoBanco" placeholder="0.00">
+                            </div>
+
+                        </div>
+
+                        <div class="botones-ganancia">
+                            <button onclick="calcularIngresoReal()">ACEPTAR</button>
+                            <button onclick="resetearGananciaReal()">RESETEAR</button>
+                            <button id="btnImprimirReal" onclick="imprimirSoloTablaReal()" style="display:none;">IMPRIMIR</button>
+                        </div>
+                        <br>
+                        <div id="resultadoIngresoReal"></div>
+                        <div id="tablaGananciaReal"></div>
+
+                    </div>
+
+
+
+
+
+
+                </section>
+
+
+
+
+            </main>
+        </div>
+
+
+        <script src="/app.js?v=9"></script>
+    </body>
+</html>
