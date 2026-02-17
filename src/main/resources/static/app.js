@@ -7,7 +7,8 @@ if (!user) {
 
 
 
-const API = "http://localhost:8080/api/vehiculos";
+const API = "https://sisparking.onrender.com/api/vehiculos";
+
 
 
 const form = document.getElementById("formVehiculo");
@@ -21,7 +22,8 @@ const vistaDetalle = document.getElementById("vista-detalle");
 
 
 /* CAJA  */
-const API_CAJA = "http://localhost:8080/api/caja";
+const API_CAJA = "https://sisparking.onrender.com/api/caja";
+
 
 const vistaCaja = document.getElementById("vista-caja");
 const tablaCaja = document.getElementById("tablaCaja");
@@ -31,7 +33,8 @@ const tablaCaja = document.getElementById("tablaCaja");
  ESPACIOS 
  */
 
-const API_PISOS = "http://localhost:8080/api/pisos";
+const API_PISOS = "https://sisparking.onrender.com/api/pisos";
+
 
 const vistaPisos = document.getElementById("vista-pisos");
 const vistaEspacios = document.getElementById("vista-espacios");
@@ -55,7 +58,8 @@ let modoAsignacion = false;
 
 
 /* TARIFAS */
-const API_TARIFAS = "http://localhost:8080/api/tarifas";
+const API_TARIFAS = "https://sisparking.onrender.com/api/tarifas";
+
 
 const vistaTarifas = document.getElementById("vista-tarifas");
 const tablaTarifas = document.getElementById("tablaTarifas");
@@ -73,7 +77,8 @@ let tarifaEditandoId = null;
  REPORTES
  ====================== */
 
-const API_REPORTES = "http://localhost:8080/api/vehiculos/reportes";
+const API_REPORTES = "https://sisparking.onrender.com/api/vehiculos/reportes";
+
 
 const vistaReportes = document.getElementById("vistaReportes");
 
@@ -279,7 +284,9 @@ function mostrarComprobante(v) {
         </div>
 
         <!-- LOGO -->
-        <img src="http://localhost:8080/images/insigniacarro.png" class="logo-img">
+        <img src="https://sisparking.onrender.com/images/insigniacarro.png" class="logo-img">
+
+
 
         <div class="titulo">ESTACIONAMIENTO</div>
         <div class="codigo">${v.id}${Date.now()}</div>
@@ -423,7 +430,8 @@ function verComprobanteSalida(id) {
                     <button class="btn btn-close" onclick="window.close()">Cerrar</button>
                 </div>
 
-                <img src="http://localhost:8080/images/insigniacarro.png" class="logo-img">
+                <img src="https://sisparking.onrender.com/images/insigniacarro.png" class="logo-img">
+
 
                 <div class="titulo">ESTACIONAMIENTO</div>
                 <div class="codigo">${v.id}${Date.now()}</div>
