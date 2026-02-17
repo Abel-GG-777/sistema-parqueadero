@@ -18,3 +18,5 @@ EXPOSE 8080
 
 # Ejecutar el jar generado
 CMD ["java","-jar","target/parqueadero-0.0.1-SNAPSHOT.jar"]
+
+CMD ["sh","-c","java -jar target/*.jar"]
